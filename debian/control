@@ -5,9 +5,14 @@ Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.
 Uploaders: Stefano Zacchiroli <zack@debian.org>
 Build-Depends: debhelper (>= 9), dh-python,
                python-all,
+               python-blinker,
+               python-flask,
                python-flask,
                python-setuptools,
+               python-twill,
                python3-all,
+               python3-blinker,
+               python3-flask,
                python3-setuptools,
                python3-sphinx,
 Standards-Version: 3.9.6
