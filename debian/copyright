@@ -5,15 +5,13 @@ Source: https://github.com/jarus/flask-testing
 
 Files: *
 Copyright: (c) 2010 by Dan Jacob.
-License: BSD
+License: BSD-2-clause
 
 Files: debian/*
 Copyright: 2015 © Stefano Zacchiroli <zack@debian.org>
-License: BSD
+License: BSD-2-clause
 
-License: BSD
- Copyright (c) 2010 by Dan Jacob.
- .
+License: BSD-2-clause
  Some rights reserved.
  .
  Redistribution and use in source and binary forms, with or without
