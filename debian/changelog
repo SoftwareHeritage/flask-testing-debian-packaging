@@ -1,6 +1,6 @@
 flask-testing (0.4.2-1) unstable; urgency=low
 
-  * Initial release (closes: #NNNNNN)
+  * Initial release (Closes: #807054).
 
- -- Stefano Zacchiroli <zack@debian.org>  Fri, 04 Dec 2015 16:56:47 +0000
+ -- Stefano Zacchiroli <zack@debian.org>  Sun, 06 Dec 2015 15:50:10 +0100
 
