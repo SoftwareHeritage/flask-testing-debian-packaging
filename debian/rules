@@ -1,0 +1,12 @@
+#! /usr/bin/make -f
+
+export PYBUILD_NAME=flask-testing
+%:
+	dh $@ --with python2,python3,sphinxdoc --buildsystem=pybuild
+
+override_dh_auto_build:
+	dh_auto_build
+	cd docs && \
+	PYTHONPATH=$(CURDIR) http_proxy= https_proxy= \
+	sphinx-build -N -E -T -b html . $(CURDIR)/.pybuild/docs/html/
+	rm -rf $(CURDIR)/.pybuild/docs/html/.doctrees

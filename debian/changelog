@@ -1,0 +1,6 @@
+flask-testing (0.4.2-1) unstable; urgency=low
+
+  * Initial release (closes: #NNNNNN)
+
+ -- Stefano Zacchiroli <zack@debian.org>  Fri, 04 Dec 2015 16:56:47 +0000
+
