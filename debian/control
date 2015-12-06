@@ -1,8 +1,8 @@
 Source: flask-testing
 Section: python
 Priority: optional
-Maintainer: Stefano Zacchiroli <zack@debian.org>
-Uploaders: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Uploaders: Stefano Zacchiroli <zack@debian.org>
 Build-Depends: debhelper (>= 9), dh-python,
                python-all,
                python-flask,
