@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9), dh-python,
                python3-sphinx,
 Standards-Version: 3.9.6
 Homepage: http://pythonhosted.org/Flask-Testing/
-Vcs-Git: git://anonscm.debian.org/python-modules/packages/flask-testing.git
+Vcs-Git: https://anonscm.debian.org/git/python-modules/packages/flask-testing.git
 Vcs-Browser: https://anonscm.debian.org/cgit/python-modules/packages/flask-testing.git
 
 Package: python-flask-testing
