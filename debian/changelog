@@ -1,12 +1,5 @@
-flask-testing (0.4.2-2) UNRELEASED; urgency=medium
-
-  * Fixed VCS URL (https)
-
- -- Ondřej Nový <novy@ondrej.org>  Tue, 29 Mar 2016 21:36:24 +0200
-
-flask-testing (0.4.2-1) unstable; urgency=low
+flask-testing (0.4.2-1) UNRELEASED; urgency=low
 
   * Initial release (Closes: #807054).
 
- -- Stefano Zacchiroli <zack@debian.org>  Sun, 06 Dec 2015 15:50:10 +0100
-
+ -- Nicolas Dandrimont <olasd@debian.org>  Wed, 20 Apr 2016 11:51:09 +0200
