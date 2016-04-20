@@ -1,5 +1,5 @@
-flask-testing (0.4.2-1) UNRELEASED; urgency=low
+flask-testing (0.4.2-1) unstable; urgency=low
 
   * Initial release (Closes: #807054).
 
- -- Nicolas Dandrimont <olasd@debian.org>  Wed, 20 Apr 2016 11:51:09 +0200
+ -- Nicolas Dandrimont <olasd@debian.org>  Wed, 20 Apr 2016 13:30:34 +0200
