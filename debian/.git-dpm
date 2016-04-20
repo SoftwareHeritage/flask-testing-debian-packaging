@@ -6,6 +6,6 @@
 flask-testing_0.4.2.orig.tar.gz
 0ef17abac8fc8fac1da3fc4786c289bae4608c32
 40994
-+debianTag="debian/%e%v"
-+patchedTag="patched/%e%v"
-+upstreamTag="upstream/%e%u"
+debianTag="debian/%e%v"
+patchedTag="patched/%e%v"
+upstreamTag="upstream/%e%u"
