@@ -46,7 +46,6 @@ Description: unit testing utilities for the Flask micro web framework
 Package: python-flask-testing-doc
 Section: doc
 Architecture: all
-Priority: extra
 Depends: ${misc:Depends}, ${sphinxdoc:Depends}
 Description: documentation for the Flask-Testing Python library - documentation
  Flask-Testing is an extension for the Flask micro web framework that provides
