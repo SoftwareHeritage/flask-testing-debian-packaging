@@ -8,5 +8,5 @@ override_dh_auto_build:
 	dh_auto_build
 	cd docs && \
 	PYTHONPATH=$(CURDIR) http_proxy= https_proxy= \
-	sphinx-build -N -E -T -b html . $(CURDIR)/.pybuild/docs/html/
+	python3 -m sphinx -N -E -T -b html . $(CURDIR)/.pybuild/docs/html/
 	rm -rf $(CURDIR)/.pybuild/docs/html/.doctrees
