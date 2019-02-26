@@ -8,7 +8,8 @@ Copyright: (c) 2010 by Dan Jacob.
 License: BSD-2-clause
 
 Files: debian/*
-Copyright: 2015 © Stefano Zacchiroli <zack@debian.org>
+Copyright: 2015 Stefano Zacchiroli <zack@debian.org>
+           2019 Jonathan Carter <jcc@debian.org>
 License: BSD-2-clause
 
 License: BSD-2-clause

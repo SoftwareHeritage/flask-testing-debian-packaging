@@ -56,16 +56,14 @@ class TestClientUtils(TestCase):
         try:
             self.assertStatus(self.client.get('/'), 404, expected_message)
         except AssertionError as e:
-            self.assertTrue(expected_message in e.args[0] or \
-                            expected_message in e.message)
+            self.assertTrue(expected_message in str(e))
 
     def test_default_status_failure_message(self):
         expected_message = 'HTTP Status 404 expected but got 200'
         try:
             self.assertStatus(self.client.get('/'), 404)
         except AssertionError as e:
-            self.assertTrue(expected_message in e.args[0] or \
-                            expected_message in e.message)
+            self.assertTrue(expected_message in str(e))
 
     def test_assert_200(self):
         self.assert200(self.client.get("/"))
@@ -89,6 +87,41 @@ class TestClientUtils(TestCase):
         response = self.client.get("/redirect/")
         self.assertRedirects(response, "/")
 
+    def test_assert_redirects_full_url(self):
+        response = self.client.get("/external_redirect/")
+        self.assertRedirects(response, "http://flask.pocoo.org/")
+
+    def test_assert_redirects_failure_message(self):
+        response = self.client.get("/")
+        try:
+            self.assertRedirects(response, "/anything")
+        except AssertionError as e:
+            self.assertTrue("HTTP Status 301, 302, 303, 305, 307 expected but got 200" in str(e))
+
+    def test_assert_redirects_custom_message(self):
+        response = self.client.get("/")
+        try:
+            self.assertRedirects(response, "/anything", "Custom message")
+        except AssertionError as e:
+            self.assertTrue("Custom message" in str(e))
+
+    def test_assert_redirects_valid_status_codes(self):
+        valid_redirect_status_codes = (301, 302, 303, 305, 307)
+
+        for status_code in valid_redirect_status_codes:
+            response = self.client.get("/redirect/?code=" + str(status_code))
+            self.assertRedirects(response, "/")
+            self.assertStatus(response, status_code)
+
+    def test_assert_redirects_invalid_status_code(self):
+        status_code = 200
+        response = self.client.get("/redirect/?code=" + str(status_code))
+        self.assertStatus(response, status_code)
+        try:
+            self.assertRedirects(response, "/")
+        except AssertionError as e:
+            self.assertTrue("HTTP Status 301, 302, 303, 305, 307 expected but got 200" in str(e))
+
     def test_assert_template_used(self):
         try:
             self.client.get("/template/")
@@ -97,12 +130,9 @@ class TestClientUtils(TestCase):
             pass
 
     def test_assert_template_not_used(self):
-        self.client.get("/")
+        self.client.get("/template/")
         try:
-            self.assert_template_used("index.html")
-            assert False
-        except AssertionError:
-            pass
+            self.assertRaises(AssertionError, self.assert_template_used, "invalid.html")
         except RuntimeError:
             pass
 
@@ -120,6 +150,15 @@ class TestClientUtils(TestCase):
         except RuntimeError:
             pass
 
+    def test_assert_context_custom_message(self):
+        self.client.get("/template/")
+        try:
+            self.assert_context("name", "nothing", "Custom message")
+        except AssertionError as e:
+            self.assertTrue("Custom message" in str(e))
+        except RuntimeError:
+            pass
+
     def test_assert_bad_context(self):
         try:
             self.client.get("/template/")
@@ -127,6 +166,15 @@ class TestClientUtils(TestCase):
                               "name", "foo")
             self.assertRaises(AssertionError, self.assert_context,
                               "foo", "foo")
+        except RuntimeError:
+            pass
+
+    def test_assert_bad_context_custom_message(self):
+        self.client.get("/template/")
+        try:
+            self.assert_context("foo", "foo", "Custom message")
+        except AssertionError as e:
+            self.assertTrue("Custom message" in str(e))
         except RuntimeError:
             pass
 
@@ -138,27 +186,59 @@ class TestClientUtils(TestCase):
         except RuntimeError:
             pass
 
+    def test_assert_flashed_messages_succeed(self):
+        try:
+            self.client.get("/flash/")
+            self.assertMessageFlashed("Flashed message")
+        except RuntimeError:
+            pass
 
-class TestLiveServer(LiveServerTestCase):
+    def test_assert_flashed_messages_failed(self):
+        try:
+            self.client.get("/flash/")
+            self.assertRaises(AssertionError, self.assertMessageFlashed, "Flask-testing has assertMessageFlashed now")
+        except RuntimeError:
+            pass
 
-        def create_app(self):
-            app = create_app()
-            app.config['LIVESERVER_PORT'] = 8943
-            return app
+    def test_assert_no_flashed_messages_fail(self):
+        try:
+            self.client.get("/no_flash/")
+            self.assertRaises(AssertionError, self.assertMessageFlashed, "Flashed message")
+        except RuntimeError:
+            pass
 
-        def test_server_process_is_spawned(self):
-            process = self._process
 
-            # Check the process is spawned
-            self.assertNotEqual(process, None)
+class BaseTestLiveServer(LiveServerTestCase):
 
-            # Check the process is alive
-            self.assertTrue(process.is_alive())
+    def test_server_process_is_spawned(self):
+        process = self._process
 
-        def test_server_listening(self):
-            response = urlopen(self.get_server_url())
-            self.assertTrue(b'OK' in response.read())
-            self.assertEqual(response.code, 200)
+        # Check the process is spawned
+        self.assertNotEqual(process, None)
+
+        # Check the process is alive
+        self.assertTrue(process.is_alive())
+
+    def test_server_listening(self):
+        response = urlopen(self.get_server_url())
+        self.assertTrue(b'OK' in response.read())
+        self.assertEqual(response.code, 200)
+
+
+class TestLiveServer(BaseTestLiveServer):
+
+    def create_app(self):
+        app = create_app()
+        app.config['LIVESERVER_PORT'] = 8943
+        return app
+
+
+class TestLiveServerOSPicksPort(BaseTestLiveServer):
+
+    def create_app(self):
+        app = create_app()
+        app.config['LIVESERVER_PORT'] = 0
+        return app
 
 
 class TestNotRenderTemplates(TestCase):
@@ -171,7 +251,7 @@ class TestNotRenderTemplates(TestCase):
     def test_assert_not_process_the_template(self):
         response = self.client.get("/template/")
 
-        assert "" == response.data
+        assert len(response.data) == 0
 
     def test_assert_template_rendered_signal_sent(self):
         self.client.get("/template/")
@@ -189,7 +269,7 @@ class TestRenderTemplates(TestCase):
     def test_assert_not_process_the_template(self):
         response = self.client.get("/template/")
 
-        assert "" != response.data
+        assert len(response.data) > 0
 
 
 class TestRestoreTheRealRender(TestCase):
@@ -206,4 +286,4 @@ class TestRestoreTheRealRender(TestCase):
 
         response = self.client.get("/template/")
 
-        assert "" != response.data
+        assert len(response.data) > 0

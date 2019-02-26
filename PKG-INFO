@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: Flask-Testing
-Version: 0.4.2
+Version: 0.7.1
 Summary: Unit testing for Flask
 Home-page: https://github.com/jarus/flask-testing
 Author: Dan Jacob

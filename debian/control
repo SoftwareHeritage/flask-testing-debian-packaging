@@ -2,38 +2,23 @@ Source: flask-testing
 Section: python
 Priority: optional
 Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
-Uploaders: Stefano Zacchiroli <zack@debian.org>, Nicolas Dandrimont <olasd@debian.org>
-Build-Depends: debhelper (>= 9), dh-python,
-               python-all,
-               python-blinker,
-               python-flask,
-               python-setuptools,
-               python-twill,
+Uploaders: Stefano Zacchiroli <zack@debian.org>,
+           Nicolas Dandrimont <olasd@debian.org>
+Build-Depends: debhelper-compat (= 12),
+               dh-python,
                python3-all,
                python3-blinker,
                python3-flask,
                python3-setuptools,
                python3-sphinx,
-Standards-Version: 3.9.8
+Standards-Version: 4.3.0
 Homepage: http://pythonhosted.org/Flask-Testing/
 Vcs-Git: https://salsa.debian.org/python-team/modules/flask-testing.git
 Vcs-Browser: https://salsa.debian.org/python-team/modules/flask-testing
 
-Package: python-flask-testing
-Architecture: all
-Depends: ${misc:Depends}, ${python:Depends},
-Recommends: ${python:Recommends}
-Suggests: ${python:Suggests}
-XB-Python-Egg-Name: Flask-Testing
-Description: unit testing utilities for the Flask micro web framework - Python 2.X
- Flask-Testing is an extension for the Flask micro web framework that provides
- unit testing helpers for Flask-based web applications.
- .
- This package contains the Python 2 modules for flask-testing
-
 Package: python3-flask-testing
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends},
+Depends: ${misc:Depends}, ${python3:Depends}
 Recommends: ${python3:Recommends}
 Suggests: ${python3:Suggests}
 XB-Python-Egg-Name: Flask-Testing

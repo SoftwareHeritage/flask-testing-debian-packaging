@@ -26,7 +26,7 @@ Writing tests
 
 Simply subclass the ``TestCase`` class::
 
-    from flask.ext.testing import TestCase
+    from flask_testing import TestCase
 
     class MyTest(TestCase):
 
@@ -36,7 +36,7 @@ Simply subclass the ``TestCase`` class::
 You must specify the ``create_app`` method, which should return a Flask instance::
 
     from flask import Flask
-    from flask.ext.testing import TestCase
+    from flask_testing import TestCase
 
     class MyTest(TestCase):
 
@@ -57,7 +57,7 @@ PhantomJS you can use the LiveServerTestCase::
 
     import urllib2
     from flask import Flask
-    from flask.ext.testing import LiveServerTestCase
+    from flask_testing import LiveServerTestCase
 
     class MyTest(LiveServerTestCase):
 
@@ -66,6 +66,8 @@ PhantomJS you can use the LiveServerTestCase::
             app.config['TESTING'] = True
             # Default port is 5000
             app.config['LIVESERVER_PORT'] = 8943
+            # Default timeout is 5 seconds
+            app.config['LIVESERVER_TIMEOUT'] = 10
             return app
 
         def test_server_is_up_and_running(self):
@@ -73,6 +75,35 @@ PhantomJS you can use the LiveServerTestCase::
             self.assertEqual(response.code, 200)
 
 The method ``get_server_url`` will return http://localhost:8943 in this case.
+
+
+Dynamic LiveServerTestCase port
+-------------------------------
+
+By default, ``LiveServerTestCase`` will use the pre-defined port for running the live server. If
+multiple tests need to run in parallel, the ``LIVESERVER_PORT`` can be set to ``0`` to have the
+underlying operating system pick an open port for the server. The full address of the running
+server can be accessed via the ``get_server_url`` call on the test case::
+
+
+    import urllib2
+    from flask import Flask
+    from flask_testing import LiveServerTestCase
+
+    class MyTest(LiveServerTestCase):
+
+        def create_app(self):
+            app = Flask(__name__)
+            app.config['TESTING'] = True
+
+            # Set to 0 to have the OS pick the port.
+            app.config['LIVESERVER_PORT'] = 0
+
+            return app
+
+        def test_server_is_up_and_running(self):
+            response = urllib2.urlopen(self.get_server_url())
+            self.assertEqual(response.code, 200)
 
 
 Testing JSON responses
@@ -150,7 +181,7 @@ not be too difficult to adapt to your own particular setup.
 First, ensure you set the database URI to something other than your production database ! Second,
 it's usually a good idea to create and drop your tables with each test run, to ensure clean tests::
 
-    from flask.ext.testing import TestCase
+    from flask_testing import TestCase
 
     from myapp import create_app, db
 
@@ -215,16 +246,16 @@ Running tests
 with unittest
 -------------
 
-For the beginning I go on the theory that you put all your tests into one file
-than you can use the :func:`unittest.main` function. This function will discover
-all your test methods in your :class:`TestCase` classes. Remember, the test
-methods and classes must starts with ``test`` (case-insensitive) that they will
-discover.
+I recommend you to put all your tests into one file so that you can use
+the :func:`unittest.main` function. This function will discover all your test
+methods in your :class:`TestCase` classes. Remember, the names of the test
+methods and classes must start with ``test`` (case-insensitive) so that
+they can be discovered.
 
 An example test file could look like this::
 
     import unittest
-    import flask.ext.testing
+    import flask_testing
 
     # your test cases
 
@@ -240,6 +271,58 @@ The `nose`_ collector and test runner works also fine with Flask-Testing.
 
 Changes
 =======
+
+0.7.1 (19.12.2017)
+------------------
+
+  * Reverts the request context changes from ``0.7.0``. This change broke
+    backwards compatibility so it will be moved to a major version release
+    instead.
+
+0.7.0 (18.12.2017)
+------------------
+
+  * Changes the way request contexts are managed. Let's Flask be responsible
+    for the context, which fixes some subtle bugs.
+
+0.6.2 (26.02.2017)
+------------------
+
+  * Add support for OS chosen port in ``LiveServerTestCase``
+  * Better error messages when missing required modules
+  * ``assertRedirects`` now supports all valid redirect codes as specified
+    in the HTTP protocol
+  * Fixed bug that caused ``TypeError`` instead of ``AssertionError`` when
+    testing against used templates
+  * Fixed bug in ``assertRedirects`` where the location was not being
+    checked properly
+
+0.6.1 (03.09.2016)
+------------------
+
+  * Fix issues that prevented tests from running when blinker was not installed
+
+0.6.0 (02.09.2016)
+------------------
+
+  * ``LiveServerTestCase`` will now start running as soon as the server is up
+  * ``assertRedirects`` now respects the ``SERVER_NAME`` config value and can compare against absolute URLs
+  * Compatibility with Flask 0.11.1
+
+0.5.0 (12.06.2016)
+------------------
+
+  * Improvements to ``LiveServerTestCase``
+
+    * The test case will now block until the server is available
+    * Fixed an issue where no request context was available
+    * Fixed an issue where tests would be run twice when ``DEBUG`` was set to True
+
+  * Add missing message arguments for assertRedirects and assertContext
+  * Better default failure message for assertRedirects
+  * Better default failure message for assertTemplateUsed
+  * Fix an issue that caused the ``render_templates`` option to not clean up after itself if set to False
+  * Update docs to use new Flask extension import specification
 
 0.4.2 (24.07.2014)
 ------------------
@@ -269,7 +352,7 @@ This release is dedicated to every contributer who made this release possible. T
 API
 ===
 
-.. module:: flask.ext.testing
+.. module:: flask_testing
 
 .. autoclass:: TestCase
    :members:
